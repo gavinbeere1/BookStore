@@ -20,6 +20,7 @@ public class Book {
 	private String title;
 	private String topic;
 	private int number;
+	private int amount;
 
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Rating> ratings;
@@ -41,6 +42,31 @@ public class Book {
 		this.ratings = ratings;
 	}
 	
+	
+
+	public Book(Long id, String author, String title, String topic, int number,
+			int amount, Set<Rating> ratings) {
+		super();
+		this.id = id;
+		this.author = author;
+		this.title = title;
+		this.topic = topic;
+		this.number = number;
+		this.amount = amount;
+		this.ratings = ratings;
+	}
+
+	
+	
+	public int getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
 
 	public void addRating(Rating ratings){
 

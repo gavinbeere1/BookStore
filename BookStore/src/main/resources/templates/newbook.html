@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Back up DB</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<object align="middle">
+<body style="background-color:powderblue;">
+<p th:inline="text">
+      You are logged as: <b>[[${#httpServletRequest.remoteUser}]]</b>
+      (<a href="/logout">logout</a>)
+    </p>
+<center>
+<td>
+
+	<h3>Add a Book</h3>
+	
+	
+	
+	
+	<form action="#" th:action="@{/AddBook}" th:object="${book}" method="post">
+		<table>
+		<tr>
+		<td>Author:</td>
+				<td><input type="text" th:field="*{author}" /></td>
+			</tr>
+			<tr>
+				<td>Title:</td>
+				<td><input type="text" th:field="*{title}" /></td>
+			</tr>
+			<tr>
+				<td>Topic:</td>
+				<td><input type="text" th:field="*{topic}" /></td>
+			</tr>
+			
+			<tr>
+				<td>Universal Book Number:</td>
+				<td><input type="number" th:field="*{number}" /></td>
+			</tr>
+		<tr>
+				<td>Number of Copies:</td>
+				<td><input type="text" th:field="*{amount}" /></td>
+			</tr>
+			<tr>
+				<td></td><td><button type="submit">Submit</button></td>
+			</tr>
+	
+		</table>
+	</form>
+	
+	</td>
+	<a style="color:blue" th:href="@{/home}">HomeScreen!</a>
+	</center>
+</body>
+
+</object>
+   
+
+</html>
+

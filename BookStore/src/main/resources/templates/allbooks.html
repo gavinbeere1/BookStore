@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+ <title>Welcome Security with Spring Boot!</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ </title>
+</head>
+<body>
+<div class="container">
+		<h2>All Books</h2>
+		<div class="row col-md-7 ">
+			<div style="margin-bottom:20px; padding:10px; background-color:#336699; color:white;">
+		  	<p>Type some text to search the table for <strong>Id</strong>, <strong>Title</strong>, <strong>Author</strong>, <strong>Topic</strong>:</p>  
+		  	<input class="form-control" id="inputFilter" type="text" placeholder="Search.." />
+		  	</div>
+		  	<centre>
+			<table id="customerTable" class="table table-bordered table-hover table-responsive">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Author</th>
+						<th>Title</th>
+						<th>Topic</th>	
+						<th>Universal Book Number</th>
+						<th>No. in Stock</th>			
+										
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			</centre>
+		</div>
+	</div>
+ <script type="text/javascript">
+
+   $(document).ready(function() {
+		
+		// DO GET
+		$.ajax({
+			type : "GET",
+			url : "/searchP",
+			success: function(result){
+				$.each(result, function(i, book){
+					
+					var customerRow = '<tr>' +
+										'<td>' + book.id + '</td>' +
+										'<td>' + book.author + '</td>' +
+										'<td>' + book.title + '</td>' +
+										'<td>' + book.topic + '</td>' +
+										'<td>' + book.number + '</td>' +
+										'<td>' + book.amount + '</td>' +
+															
+										/* '<td><a href="/viewplayer/'+userLogin.id+'">View Player</a></td>' + */	 '</tr>';
+									
+					$('#customerTable tbody').append(customerRow);
+				
+		        });
+				
+				$( "#customerTable tbody tr:odd" ).addClass("info");
+				$( "#customerTable tbody tr:even" ).addClass("success");
+			},
+			error : function(e) {
+				alert("ERROR: ", e);
+				console.log("ERROR: ", e);
+			}
+		});
+		
+		// do Filter on View
+		 $("#inputFilter").on("keyup", function() {
+		    var inputValue = $(this).val().toLowerCase();
+		    $("#customerTable tr").filter(function() {
+		    	$(this).toggle($(this).text().toLowerCase().indexOf(inputValue) > -1)
+		    });
+		}); 
+	})
+ 
+  </script>
+</body>
+</html>

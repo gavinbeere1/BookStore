@@ -1,5 +1,6 @@
 package Paddys.Patterns.BookStore.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
 
 
 @Entity
@@ -24,10 +26,13 @@ public class UserLogin {
 	private String address;
 	private String password;
 	private String paymentMethod;
-	private String userType;
+	private boolean userStatus;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Book> books;
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public Set<Role> roles;
 	
 	public UserLogin() {
 		super();
@@ -37,7 +42,7 @@ public class UserLogin {
 
 	public UserLogin(Long id, String firstName, String lastName, Long phone,
 			String userName, String address, String password,
-			String paymentMethod, String userType, Set<Book> books) {
+			String paymentMethod, boolean userStatus, Set<Book> books) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -47,10 +52,48 @@ public class UserLogin {
 		this.address = address;
 		this.password = password;
 		this.paymentMethod = paymentMethod;
-		this.userType = userType;
+		this.userStatus = userStatus;
 		this.books = books;
 	}
 
+	
+
+	public UserLogin(Long id, String firstName, String lastName, Long phone,
+			String userName, String address, String password,
+			String paymentMethod, boolean userStatus, Set<Book> books,
+			Set<Paddys.Patterns.BookStore.model.Role> roles) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phone = phone;
+		this.userName = userName;
+		this.address = address;
+		this.password = password;
+		this.paymentMethod = paymentMethod;
+		this.userStatus = userStatus;
+		this.books = books;
+		this.roles = roles;
+	}
+
+
+
+	public Set<Role> getRoles() {
+		if (roles == null)
+			roles = new HashSet<>();
+		return roles;
+	}
+
+
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+public void addRole(Role role)
+{
+	getRoles().add(role);
+}
 
 	public void addBook(Book books){
 
@@ -58,14 +101,14 @@ public class UserLogin {
 	}
 	
 	
-	public String getUserType() {
-		return userType;
+	public boolean getUserStatus() {
+		return userStatus;
 	}
 
 
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setUserStatus(boolean userStatus) {
+		this.userStatus = userStatus;
 	}
 
 

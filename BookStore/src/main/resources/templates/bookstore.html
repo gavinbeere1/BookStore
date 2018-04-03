@@ -3,6 +3,10 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+     <p th:inline="text">
+      You are logged as: <b>[[${#httpServletRequest.remoteUser}]]</b>
+      (<a href="/logout">logout</a>)
+    </p>
 </head>
 <body>
    <h2>BookStore Yay</h2>

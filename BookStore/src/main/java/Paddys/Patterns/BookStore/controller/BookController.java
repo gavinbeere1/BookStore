@@ -13,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
+import Paddys.Patterns.BookStore.model.Role;
 
 import Paddys.Patterns.BookStore.repository.UserLoginRepository;
-
 import Paddys.Patterns.BookStore.model.UserLogin;
 
 @Controller
@@ -26,6 +24,13 @@ import Paddys.Patterns.BookStore.model.UserLogin;
 	
 	@Autowired
 	UserLoginRepository uR;
+	
+	
+	   @RequestMapping(value={"/login"})
+	   public String login(){
+	       return "login";
+	   }
+	  
 
 	    @GetMapping("/")
 	    public String welcome() {
@@ -40,14 +45,19 @@ import Paddys.Patterns.BookStore.model.UserLogin;
 		model.addAttribute("user", new UserLogin()); //add model to view
 
 		 return "index";
-
 	}
-
 @RequestMapping(value = "/registeruser", method = RequestMethod.POST)
 public String addNewPost(@Valid UserLogin user, Model model, BindingResult errors) {
 	
+	Role role1 = new Role();
+	Role role2 = new Role();
+
+	role1.setRole("USER");
+	role2.setRole("ADMIN");
+	System.out.print(role1);
+	user.setUserStatus(true);
+	user.addRole(role1);
 	
-	user.setUserType("Regular");
 	uR.save(user);
 	
 	model.addAttribute("username", user.getUserName());
@@ -55,7 +65,6 @@ public String addNewPost(@Valid UserLogin user, Model model, BindingResult error
 	return "result";
 	
 }
-
 
 
 }

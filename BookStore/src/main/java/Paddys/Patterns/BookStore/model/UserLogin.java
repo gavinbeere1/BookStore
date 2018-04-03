@@ -1,9 +1,15 @@
 package Paddys.Patterns.BookStore.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 
 @Entity
 public class UserLogin {
@@ -18,14 +24,20 @@ public class UserLogin {
 	private String address;
 	private String password;
 	private String paymentMethod;
+	private String userType;
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public Set<Book> books;
 	
 	public UserLogin() {
 		super();
 	}
 
+	
+
 	public UserLogin(Long id, String firstName, String lastName, Long phone,
 			String userName, String address, String password,
-			String paymentMethod) {
+			String paymentMethod, String userType, Set<Book> books) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -35,7 +47,40 @@ public class UserLogin {
 		this.address = address;
 		this.password = password;
 		this.paymentMethod = paymentMethod;
+		this.userType = userType;
+		this.books = books;
 	}
+
+
+	public void addBook(Book books){
+
+		getBooks().add(books);
+	}
+	
+	
+	public String getUserType() {
+		return userType;
+	}
+
+
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+
+
+	public Set<Book> getBooks() {
+		return books;
+	}
+
+
+
+	public void setBooks(Set<Book> books) {
+		this.books = books;
+	}
+
+
 
 	public Long getId() {
 		return id;

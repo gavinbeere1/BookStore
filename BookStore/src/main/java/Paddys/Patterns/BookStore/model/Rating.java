@@ -14,18 +14,36 @@ public class Rating {
 	private String bookName;
 	private String userName;
 	private int rating;
+	private String commentContent;
+
 	
 	public Rating() {
 		super();
 	}
 
-	public Rating(Long id, String bookName, String userName, int rating) {
+
+	public Rating(Long id, String bookName, String userName, int rating,
+			String commentContent) {
 		super();
 		this.id = id;
 		this.bookName = bookName;
 		this.userName = userName;
 		this.rating = rating;
+		this.commentContent = commentContent;
 	}
+
+
+	
+
+	public String getCommentContent() {
+		return commentContent;
+	}
+
+
+	public void setCommentContent(String commentContent) {
+		this.commentContent = commentContent;
+	}
+
 
 	public Long getId() {
 		return id;

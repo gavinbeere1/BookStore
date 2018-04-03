@@ -1,9 +1,14 @@
 package Paddys.Patterns.BookStore.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Book {
@@ -16,18 +21,43 @@ public class Book {
 	private String topic;
 	private int number;
 
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public Set<Rating> ratings;
+	
+	
 	public Book() {
 		super();
 	}
 
-	public Book(Long id, String author, String title, String topic, int number) {
+	
+	public Book(Long id, String author, String title, String topic, int number,
+			Set<Rating> ratings) {
 		super();
 		this.id = id;
 		this.author = author;
 		this.title = title;
 		this.topic = topic;
 		this.number = number;
+		this.ratings = ratings;
 	}
+	
+
+	public void addRating(Rating ratings){
+
+		getRatings().add(ratings);
+	}
+	
+
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
 
 	public Long getId() {
 		return id;

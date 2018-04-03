@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+ 
+ <title>Welcome Security with Spring Boot!</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
+ 
+ </head>
+  <p th:inline="text">
+      You are logged as: <b>[[${#httpServletRequest.remoteUser}]]</b>
+      (<a href="/logout">logout</a>)
+    </p>
+     <div align="center">
+ 
+   <!--  <a> <img src="images/logo.jpg"> </img></a> -->
+ </div>
+<body>
+
+
+<center>
+	
+	
+
+	
+	   
+	   
+	   
+	  
+	</center>   
+	
+	<center>
+
+<h4>User: <h4 th:text="${username}" name="username"/> </h4>
+	
+	
+	
+	          <a style="color:blue" th:href="@{/}">HomeScreen!</a>
+	
+	</center>
+
+</body>
+</html>

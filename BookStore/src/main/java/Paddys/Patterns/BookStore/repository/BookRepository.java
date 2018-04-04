@@ -12,4 +12,7 @@ import Paddys.Patterns.BookStore.model.Book;
 public interface BookRepository extends JpaRepository<Book, Long>{
 
 	ArrayList<Book> findAll();
+
+	Book findByTitle(String title);
+
 }

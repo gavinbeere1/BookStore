@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<title>Insert title here</title>
+</head>
+<body>
+<div>
+<center>
+	<h3>User</h3>
+	<h4>User Name: <text th:text="${mycart?.userName}" /> </h4>
+	<h4>Address: <text th:text="${mycart?.address}" /> </h4>
+	<h4>Payment Method: <text th:text="${mycart?.paymentMethod}" /> </h4>
+	 
+	<ul>
+    <th:block th:object="${mycart}" th:each="item : ${mycart?.books}">
+   <h3>---------------------------------------</h3>
+   <h5>ID:<text th:text="${item?.id}" /> </h5>
+    <h5>Author:<text th:text="${item?.author}" /> </h5>
+    <h5>Title:<text th:text="${item?.title}" /> </h5>
+    <h5>Topic:<text th:text="${item?.topic}" /> </h5>
+     <h5>Universal Book Code:<text th:text="${item?.number}" /> </h5>
+      <h5>Amount Left in Store:<text th:text="${item?.amount}" /> </h5>
+   <a style="color:blue" th:href="@{/removebook/{title}(title=${item?.title})}">Remove Book From Cart</a>
+    </th:block>
+    </ul>
+ 	
+ 	      <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ 	
+	   <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
+	   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ 	
+<!-- 	   <a style="color:blue" th:if="${myteam != null}" th:href="@{/leaveteam/{id}(id=${myteam?.id})}">Leave Team?!</a>
+ -->
+</center>	   	
+</div>
+</body>
+</html>

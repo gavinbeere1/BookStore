@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="container">
+ 
+ 
+ 
+ 	<h2> Customers List </h2>
+ 	
+ 	<table class = "table table-striped">
+ 	
+ 	<tr>
+ 	<th> Id </th>
+ 	<th> First Name </th>
+ 	<th> Last Name </th>
+ 	<th> UserName </th>
+ 	<th> Address </th>
+ 	<th> Payment Method </th>
+ 	
+ 	
+ 	
+ 	</tr>
+ 	
+ 	
+ 	<tr th:each="userLogin : ${users}">
+ 	<td th:text="${userLogin.id}"></td>
+ 	<td th:text="${userLogin.firstName}"></td>
+ 	<td th:text="${userLogin.lastName}"></td>
+ 	<td th:text="${userLogin.userName}"></td>
+ 	<td th:text="${userLogin.address}"></td>
+  	<td th:text="${userLogin.paymentMethod}"></td> 
+  	<td> <a style="color:blue" th:href="@{/viewUserCart/{userName}(userName=${userLogin?.userName})}">View Cart!</a>
+  	 </td>
+ 	
+ </tr>
+<!-- 	<tr>
+    <th:block th:object="${users}" th:each="item : ${userLogin?.books}">
+        <h5>ID:<text th:text="${item?.id}" /> </h5>
+    
+    <h5>Author:<text th:text="${item?.author}" /> </h5>
+    <h5>Title:<text th:text="${item?.title}" /> </h5>
+    <h5>Topic:<text th:text="${item?.topic}" /> </h5>
+    <h5>Number:<text th:text="${item?.number}" /> </h5>
+    <h5>Amount:<text th:text="${item?.amount}" /> </h5>
+    
+    </th:block>
+
+ 	 
+ 	</tr>
+ 	
+-->
+
+ 	
+ 	</table>
+ <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
+ 
+ 
+
+ 
+ 
+ </div>
+
+ 
+</body>
+</html>

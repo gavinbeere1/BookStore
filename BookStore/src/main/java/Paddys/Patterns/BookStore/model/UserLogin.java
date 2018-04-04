@@ -189,6 +189,9 @@ public void addRole(Role role)
 		this.paymentMethod = paymentMethod;
 	}
 	
+	public void RemoveBook(Book book){
+		books.remove(book);
+	}
 	
 
 }

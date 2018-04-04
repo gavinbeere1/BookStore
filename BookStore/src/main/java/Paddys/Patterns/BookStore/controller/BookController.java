@@ -2,22 +2,22 @@ package Paddys.Patterns.BookStore.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 
 
 import Paddys.Patterns.BookStore.model.Book;
@@ -154,5 +154,88 @@ public String addNewLeague(@Valid Book book, Model model, BindingResult errors) 
 	return "adminResult";
 	
 }
+
+@RequestMapping(value="/addtocart/{title}", method=RequestMethod.GET)
+public String ViewBook(Model model, @PathVariable String title) {
+	   
+    Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+    String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+
+    UserLogin user = uR.findByUserName(email);
+	 
+	  Book book = bookRepository.findByTitle(title);
+	  
+	  user.addBook(book);
+	  
+	  uR.save(user);
+//	   model.addAttribute("team", team);
+	   
+	  
+	   return "allbooks";
+}
+
+
+@RequestMapping(value = "/mycart", method=RequestMethod.GET)
+	public String viewMyTeam(Model model) {
+
+	  Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+      String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+
+      UserLogin user = uR.findByUserName(email);
+    
+
+      model.addAttribute("mycart", user);
+
+	     return "mycart";
+}
+
+@RequestMapping(value="/removebook/{title}", method={RequestMethod.POST, RequestMethod.GET})
+public String leaveTeam(@PathVariable String title) {
+	   
+	   
+	   Book book = bookRepository.findByTitle(title);
+    
+	   Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+	   String email = loggedInUser.getName();
+	   
+	   UserLogin user = uR.findByUserName(email);
+	   
+	   
+	   user.RemoveBook(book);
+
+		 
+	   uR.save(user);
+	   
+	   
+    return "redirect:/mycart";
+}
+
+@RequestMapping(value="/showUsers", method=RequestMethod.GET)
+public String Users(Model model)
+{
+		  
+	 
+	   ArrayList<UserLogin> users = (ArrayList<UserLogin>) uR.findAll();
+	   
+//	   List<UserLogin> players = (List<UserLogin>) userRepository.findByUserType("Player");
+	   model.addAttribute("users", users);
+	  
+	   return "users";
+	   
+}
+
+@RequestMapping(value="/viewUserCart/{userName}", method=RequestMethod.GET)
+public String ViewCart(Model model, @PathVariable String userName) {
+	   
+	   
+	   
+	  UserLogin ul = uR.findByUserName(userName);
+    
+	  model.addAttribute("mycart", ul);
+	  
+	 
+    return "mycart";
+}
+
 
 }

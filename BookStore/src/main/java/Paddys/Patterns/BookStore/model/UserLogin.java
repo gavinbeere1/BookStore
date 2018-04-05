@@ -32,36 +32,19 @@ public class UserLogin {
 	public Set<Book> books;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public Set<Book> purchasedBooks;
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Role> roles;
 	
 	public UserLogin() {
 		super();
 	}
 
-	
-
-	public UserLogin(Long id, String firstName, String lastName, Long phone,
-			String userName, String address, String password,
-			String paymentMethod, boolean userStatus, Set<Book> books) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phone = phone;
-		this.userName = userName;
-		this.address = address;
-		this.password = password;
-		this.paymentMethod = paymentMethod;
-		this.userStatus = userStatus;
-		this.books = books;
-	}
-
-	
-
 	public UserLogin(Long id, String firstName, String lastName, Long phone,
 			String userName, String address, String password,
 			String paymentMethod, boolean userStatus, Set<Book> books,
-			Set<Paddys.Patterns.BookStore.model.Role> roles) {
+			Set<Book> purchasedBooks, Set<Role> roles) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -73,10 +56,18 @@ public class UserLogin {
 		this.paymentMethod = paymentMethod;
 		this.userStatus = userStatus;
 		this.books = books;
+		this.purchasedBooks = purchasedBooks;
 		this.roles = roles;
 	}
 
 
+	public Set<Book> getPurchasedBooks() {
+		return purchasedBooks;
+	}
+
+	public void setPurchasedBooks(Set<Book> purchasedBooks) {
+		this.purchasedBooks = purchasedBooks;
+	}
 
 	public Set<Role> getRoles() {
 		if (roles == null)
@@ -95,11 +86,21 @@ public void addRole(Role role)
 	getRoles().add(role);
 }
 
+
+public void addPurchasedBook(Book purchasedBooks)
+{
+	
+	getPurchasedBooks().add(purchasedBooks);
+}
+
+
+
 	public void addBook(Book books){
 
 		getBooks().add(books);
 	}
 	
+
 	
 	public boolean getUserStatus() {
 		return userStatus;
@@ -114,7 +115,12 @@ public void addRole(Role role)
 
 
 	public Set<Book> getBooks() {
+		
+		if (books == null)
+			books = new HashSet<>();
 		return books;
+		
+	
 	}
 
 
@@ -123,6 +129,7 @@ public void addRole(Role role)
 		this.books = books;
 	}
 
+	
 
 
 	public Long getId() {

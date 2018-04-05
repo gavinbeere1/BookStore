@@ -41,6 +41,10 @@
 				<td>Number of Copies:</td>
 				<td><input type="text" th:field="*{amount}" /></td>
 			</tr>
+				<tr>
+				<td>Price per copy:</td>
+				<td><input type="text" th:field="*{price}" /></td>
+			</tr>
 			<tr>
 				<td></td><td><button type="submit">Submit</button></td>
 			</tr>
@@ -49,7 +53,7 @@
 	</form>
 	
 	</td>
-	<a style="color:blue" th:href="@{/home}">HomeScreen!</a>
+	<a style="color:blue" th:href="@{/}">HomeScreen!</a>
 	</center>
 </body>
 

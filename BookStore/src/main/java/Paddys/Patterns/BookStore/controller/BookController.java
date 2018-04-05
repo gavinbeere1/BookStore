@@ -1,8 +1,11 @@
 package Paddys.Patterns.BookStore.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -18,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+
+
 
 
 import Paddys.Patterns.BookStore.model.Book;
@@ -183,7 +189,16 @@ public String ViewBook(Model model, @PathVariable String title) {
 
       UserLogin user = uR.findByUserName(email);
     
-
+      int totalPrice = 0;
+      
+	   Set<Book> books = user.getBooks();
+	   
+	   for (Book b : books)
+	   {
+		   totalPrice = totalPrice + b.getPrice();
+	   }
+      
+	   model.addAttribute("totalPrice", totalPrice);
       model.addAttribute("mycart", user);
 
 	     return "mycart";
@@ -217,7 +232,6 @@ public String Users(Model model)
 	 
 	   ArrayList<UserLogin> users = (ArrayList<UserLogin>) uR.findAll();
 	   
-//	   List<UserLogin> players = (List<UserLogin>) userRepository.findByUserType("Player");
 	   model.addAttribute("users", users);
 	  
 	   return "users";
@@ -235,6 +249,42 @@ public String ViewCart(Model model, @PathVariable String userName) {
 	  
 	 
     return "mycart";
+}
+
+
+//This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
+@RequestMapping(value="/purchaseBooks", method=RequestMethod.GET)
+public String PurchaseBooks(Model model) {
+	
+
+	   Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+	   String email = loggedInUser.getName();
+	   
+	   UserLogin user = uR.findByUserName(email);
+
+	   Set<Book> set = user.getBooks();
+
+	   
+	   //Deleting a list
+	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
+	  {
+		  Book b = iterator.next();
+		  
+		  if (b.getId() > 0)
+			  
+		  user.addPurchasedBook(b);
+		  iterator.remove();
+		  System.out.print("Book Removed ");
+		  
+	  }
+
+	 uR.save(user);
+	 
+	 
+	model.addAttribute("myPurchases", user);
+	
+	return "purchases";
+	
 }
 
 

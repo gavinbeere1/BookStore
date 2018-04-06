@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+function myFunction(){
+
+
+		var code = document.getElementById("code").value;
+ 		 var price = document.getElementById("price").value;
+
+	$.ajax({
+  type: "GET",
+  url: "/calculateDiscount",
+  data: {  
+          code: code
+	} // parameters
+
+/* 	contentType: "application/json; charset=utf-8",
+datatype: 'json' */
+//alert(status);
+});
+}
+
+</script>
+
+</head>
+<body>
+
+<div>
+<center>
+
+ 	<h3>Total Price: $<text th:text="${totalPrice}" id="price"/> </h3>
+ 	<input type="text" name="firstname" id="code">
+   <button onclick="myFunction()">Calculate Discount</button> 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ 	
+	   <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
+	   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ 	
+<!-- 	   <a style="color:blue" th:if="${myteam != null}" th:href="@{/leaveteam/{id}(id=${myteam?.id})}">Leave Team?!</a>
+ -->
+</center>	   	
+</div>
+
+
+	
+</body>
+</html>

@@ -6,12 +6,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Purchases</h1>
+
 <center>
-	
+							<h1>Your Purchases</h1>	
 	<h4>User Name: <text th:text="${myPurchases?.userName}" /> </h4>
-	<h4>Address: <text th:text="${myPurchases?.address}" /> </h4>
-	<h4>Payment Method: <text th:text="${myPurchases?.paymentMethod}" /> </h4>
+	<!-- <h4>Address: <text th:text="${myPurchases?.address}" /> </h4>
+	<h4>Payment Method: <text th:text="${myPurchases?.paymentMethod}" /> </h4> -->
 	 
 	<ul>
     <th:block th:object="${myPurchases}" th:each="item : ${myPurchases?.purchasedBooks}">
@@ -22,7 +22,7 @@
     <h5>Topic:<text th:text="${item?.topic}" /> </h5>
      <h5>Universal Book Code:<text th:text="${item?.number}" /> </h5>
       <h5>Amount Left in Store:<text th:text="${item?.amount}" /> </h5>
-  <!--  <a style="color:blue" th:href="@{/removebook/{title}(title=${item?.title})}">Remove Book From Cart</a> -->
+    <a style="color:blue" th:href="@{/reviewBook/{id}(id=${item?.title})}">Review Book</a> 
     </th:block>
     </ul>
  	<!-- <h3>Total Price: $<text th:text="${totalPrice}"/> </h3> -->

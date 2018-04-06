@@ -10,8 +10,8 @@
 <center>
 	<h3>User</h3>
 	<h4>User Name: <text th:text="${mycart?.userName}" /> </h4>
-	<h4>Address: <text th:text="${mycart?.address}" /> </h4>
-	<h4>Payment Method: <text th:text="${mycart?.paymentMethod}" /> </h4>
+<!-- 	<h4>Address: <text th:text="${mycart?.address}" /> </h4>
+	<h4>Payment Method: <text th:text="${mycart?.paymentMethod}" /> </h4> -->
 	 
 	<ul>
     <th:block th:object="${mycart}" th:each="item : ${mycart?.books}">
@@ -29,9 +29,10 @@
  	
  	   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
  	
-	   <a style="color:blue" th:href="@{/purchaseBooks}">Purchase Books</a>
+	   <a style="color:blue" th:href="@{/discount}">Purchase Books</a>
 	   <br />  
  	      <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ 		   <a style="color:blue" th:href="@{/purchaseBooks}">Actual purchase</a>
  	
 	   <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
 	   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

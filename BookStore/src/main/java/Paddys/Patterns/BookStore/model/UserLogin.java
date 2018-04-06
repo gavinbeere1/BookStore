@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 
 
@@ -23,10 +24,11 @@ public class UserLogin {
 	private String lastName;
 	private Long phone;
 	private String userName;
-	private String address;
 	private String password;
-	private String paymentMethod;
 	private boolean userStatus;
+	
+	@OneToOne
+	public PaymentDetails payDetails;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Book> books;
@@ -41,9 +43,10 @@ public class UserLogin {
 		super();
 	}
 
+    
 	public UserLogin(Long id, String firstName, String lastName, Long phone,
-			String userName, String address, String password,
-			String paymentMethod, boolean userStatus, Set<Book> books,
+			String userName, String password, boolean userStatus,
+			PaymentDetails payDetails, Set<Book> books,
 			Set<Book> purchasedBooks, Set<Role> roles) {
 		super();
 		this.id = id;
@@ -51,13 +54,22 @@ public class UserLogin {
 		this.lastName = lastName;
 		this.phone = phone;
 		this.userName = userName;
-		this.address = address;
 		this.password = password;
-		this.paymentMethod = paymentMethod;
 		this.userStatus = userStatus;
+		this.payDetails = payDetails;
 		this.books = books;
 		this.purchasedBooks = purchasedBooks;
 		this.roles = roles;
+	}
+
+
+	public PaymentDetails getPayDetails() {
+		return payDetails;
+	}
+
+
+	public void setPayDetails(PaymentDetails payDetails) {
+		this.payDetails = payDetails;
 	}
 
 
@@ -172,13 +184,6 @@ public void addPurchasedBook(Book purchasedBooks)
 		this.userName = userName;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
 	public String getPassword() {
 		return password;
@@ -188,14 +193,7 @@ public void addPurchasedBook(Book purchasedBooks)
 		this.password = password;
 	}
 
-	public String getPaymentMethod() {
-		return paymentMethod;
-	}
 
-	public void setPaymentMethod(String paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-	
 	public void RemoveBook(Book book){
 		books.remove(book);
 	}

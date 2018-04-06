@@ -1,5 +1,7 @@
 package Paddys.Patterns.BookStore.controller;
 
+import static java.lang.Math.toIntExact;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,8 +19,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
+
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import Paddys.Patterns.BookStore.model.Book;
+import Paddys.Patterns.BookStore.model.Rating;
 import Paddys.Patterns.BookStore.model.Role;
 import Paddys.Patterns.BookStore.repository.UserLoginRepository;
 import Paddys.Patterns.BookStore.model.UserLogin;
@@ -139,6 +149,8 @@ public List<Book> getResource2()
 @RequestMapping(value="/AddBook", method=RequestMethod.GET)
 public String index2(Model model) {
     
+	
+	
 	model.addAttribute("book", new Book()); //add model to view
 
     return "newbook";
@@ -150,7 +162,7 @@ public String index2(Model model) {
 public String addNewLeague(@Valid Book book, Model model, BindingResult errors) {
 
  
-
+	
 	//this is code for a new user
 
 	bookRepository.save(book);
@@ -204,7 +216,7 @@ public String ViewBook(Model model, @PathVariable String title) {
 	     return "mycart";
 }
 
-@RequestMapping(value="/removebook/{title}", method={RequestMethod.POST, RequestMethod.GET})
+@RequestMapping(value="/removebook/{title}", method=RequestMethod.POST)
 public String leaveTeam(@PathVariable String title) {
 	   
 	   
@@ -220,9 +232,42 @@ public String leaveTeam(@PathVariable String title) {
 
 		 
 	   uR.save(user);
-	   
+	  
 	   
     return "redirect:/mycart";
+}
+
+@RequestMapping(value="/reviewABook", method=RequestMethod.POST)
+public String reviewBook(@Valid Rating rating, Model model, BindingResult errors) {
+	   
+	System.out.println("Rating : " + rating);
+//	System.out.println("Book title : " + id);
+
+//    int bar = toIntExact(id);
+//	
+//	Book book = bookRepository.findByTitle(id);
+//	
+//	model.addAttribute("book", book);
+//	model.addAttribute("review", new Rating());
+	   
+    return "mycart";
+}
+
+
+@RequestMapping(value="/reviewBook/{id}", method=RequestMethod.GET)
+public String removeBook(@PathVariable String id, Model model) {
+	   
+
+	
+
+//    int bar = toIntExact(id);
+//	
+	Book book = bookRepository.findByTitle(id);
+	
+	model.addAttribute("book", book);
+	model.addAttribute("rating", new Rating());
+	   
+    return "review";
 }
 
 @RequestMapping(value="/showUsers", method=RequestMethod.GET)
@@ -253,6 +298,43 @@ public String ViewCart(Model model, @PathVariable String userName) {
 
 
 //This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
+@RequestMapping(value="/discount", method=RequestMethod.GET)
+public String Discount(Model model) {
+	
+	
+	  Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+      String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+
+      UserLogin user = uR.findByUserName(email);
+    
+      int totalPrice = 0;
+      
+	   Set<Book> books = user.getBooks();
+	   
+	   for (Book b : books)
+	   {
+		   totalPrice = totalPrice + b.getPrice();
+	   }
+      
+	   model.addAttribute("totalPrice", totalPrice);
+	
+	
+	return "discountPage";
+	
+	
+}
+
+//@RequestMapping(value="/discountCheck", method=RequestMethod.GET)
+//public String DiscountCheck(Model model, @RequestAttribute("discount") String discount) {
+//	
+//	
+//	System.out.print(discount);
+//	
+//	return "discountPage";
+//	
+//	
+//}
+//This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
 @RequestMapping(value="/purchaseBooks", method=RequestMethod.GET)
 public String PurchaseBooks(Model model) {
 	
@@ -274,7 +356,6 @@ public String PurchaseBooks(Model model) {
 			  
 		  user.addPurchasedBook(b);
 		  iterator.remove();
-		  System.out.print("Book Removed ");
 		  
 	  }
 
@@ -287,5 +368,62 @@ public String PurchaseBooks(Model model) {
 	
 }
 
+@RequestMapping(value="/calculateDiscount", method=RequestMethod.GET)
+public String CalculateDiscount(Model model, @RequestParam("code") String code,  RedirectAttributes redirectAttributes) {
+	
+	///need to calculate price if codes correct then return page with card info then after proceed call purchasebooks controller!
+	System.out.println("Price: " + code );
+	 Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+     String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+
+     UserLogin user = uR.findByUserName(email);
+   
+     int totalPrice = 0;
+	if (code.equals("Discount1010"))
+	{
+	      
+		   Set<Book> books = user.getBooks();
+		   
+		   for (Book b : books)
+		   {
+			   totalPrice = totalPrice + b.getPrice();
+		   }
+		   int discountPrice = (int) (totalPrice * .80);
+		   
+		   model.addAttribute("totalPrice", totalPrice);
+		   
+			System.out.println("Price: " + discountPrice );
+	}
+	
+	else {
+	
+		Set<Book> books = user.getBooks();
+		   
+		   for (Book b : books)
+		   {
+			   totalPrice = totalPrice + b.getPrice();
+		   }
+		   
+	System.out.println("Price: " + totalPrice );
+
+	model.addAttribute("totalPrice", totalPrice);
+	}
+	///pass new payment details object here
+	return "payment";
+
+
+	
+}
+
+//@RequestMapping(value="/payment}", method=RequestMethod.GET)
+//public String ViewCart22(Model model) {
+//	   
+//	   
+//	   
+//	  
+//	  
+//	 
+//    return "payment";
+//}
 
 }

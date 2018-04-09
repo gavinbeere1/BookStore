@@ -47,7 +47,7 @@ public class Book {
 		this.ratings = ratings;
 	}
 
-
+	
 
 
 	public int getPrice() {

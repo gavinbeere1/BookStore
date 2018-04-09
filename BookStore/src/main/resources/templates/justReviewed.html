@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<title>Insert title here</title>
+</head>
+<body>
+<center>
+			<h1>Reviews</h1>	
+	<h4>Author: <text th:text="${book?.author}" /> </h4>
+	<h4>Title: <text th:text="${book?.title}" /> </h4>
+	<h4>Topic: <text th:text="${book?.topic}" /> </h4>
+	<h4>Number: <text th:text="${book?.number}" /> </h4>
+	<h4>Amount: <text th:text="${book?.amount}" /> </h4>
+	<h4>Price: <text th:text="${book?.author}" /> </h4>
+	<h4>---------------------------------------------</h4>
+	<ul>
+    <th:block th:object="${book}" th:each="item : ${book?.ratings}">
+   <h3>---------------------------------------</h3>
+   <h5>Rating / 10: <text th:text="${item?.rating}" /> </h5>
+    <h5>Comments: <text th:text="${item?.commentContent}" /> </h5>
+    <h4>---------------------------------------------</h4>
+    
+    </th:block>
+    </ul>
+		 <br />  
+ 	      <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+ 	
+	   <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
+	   <br />  
+</center>
+</body>
+</html>

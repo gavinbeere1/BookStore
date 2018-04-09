@@ -10,11 +10,13 @@
 <h3>Book Title:<text th:text="${book.title}" id="id"/> </h3>
 <h3>Book Author:<text th:text="${book.author}" id="id"/> </h3>
 
- <form action="#" th:action="@{/reviewABook}" th:object="${rating}" method="post">
+ <form action="#" th:action="@{/reviewABook/{title}(title=${book.title})}" th:object="${rating}" method="post">
+		
+		
 		<table>
 		<tr>
 		<td>Rating:</td>
-				<td><input type="text" th:field="*{bookName}" /></td>
+				<td><input type="number" th:field="*{rating}" /></td>
 			</tr>
 			<tr>
 				<td>Review:</td>

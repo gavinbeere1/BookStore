@@ -237,22 +237,42 @@ public String leaveTeam(@PathVariable String title) {
     return "redirect:/mycart";
 }
 
-@RequestMapping(value="/reviewABook", method=RequestMethod.POST)
-public String reviewBook(@Valid Rating rating, Model model, BindingResult errors) {
+@RequestMapping(value="/reviewABook/{title}", method=RequestMethod.POST)
+public String reviewBook(@PathVariable String title, @Valid Rating rating, Model model, BindingResult errors) {
 	   
-	System.out.println("Rating : " + rating);
-//	System.out.println("Book title : " + id);
+	
+	 Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+     String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
 
-//    int bar = toIntExact(id);
-//	
-//	Book book = bookRepository.findByTitle(id);
-//	
-//	model.addAttribute("book", book);
-//	model.addAttribute("review", new Rating());
+
+    Book book = bookRepository.findByTitle(title);
+    
+    //rating and content
+    
+    rating.setBookName(title);
+    rating.setUserName(email);
+    
+    book.addRating(rating);
+    
+    bookRepository.save(book);
+    
+    model.addAttribute("book", book);
 	   
-    return "mycart";
+    return "justReviewed";
 }
 
+
+@RequestMapping(value="/showbookReview/{title}", method=RequestMethod.GET)
+public String ShowBook(Model model, @PathVariable String title) {
+	   
+	
+	 
+	  Book book = bookRepository.findByTitle(title);
+
+	   
+	  model.addAttribute("book", book);
+	   return "justReviewed";
+}
 
 @RequestMapping(value="/reviewBook/{id}", method=RequestMethod.GET)
 public String removeBook(@PathVariable String id, Model model) {
@@ -294,6 +314,19 @@ public String ViewCart(Model model, @PathVariable String userName) {
 	  
 	 
     return "mycart";
+}
+
+@RequestMapping(value="/viewUserPurchases/{userName}", method=RequestMethod.GET)
+public String ViewPurchases(Model model, @PathVariable String userName) {
+	   
+	   
+	   
+	  UserLogin ul = uR.findByUserName(userName);
+    
+	  model.addAttribute("mycart", ul);
+	  
+	 
+    return "myPurchases";
 }
 
 
@@ -369,6 +402,7 @@ public String PurchaseBooks(Model model) {
 }
 
 @RequestMapping(value="/calculateDiscount", method=RequestMethod.GET)
+@ResponseBody
 public String CalculateDiscount(Model model, @RequestParam("code") String code,  RedirectAttributes redirectAttributes) {
 	
 	///need to calculate price if codes correct then return page with card info then after proceed call purchasebooks controller!
@@ -381,6 +415,7 @@ public String CalculateDiscount(Model model, @RequestParam("code") String code, 
      int totalPrice = 0;
 	if (code.equals("Discount1010"))
 	{
+		
 	      
 		   Set<Book> books = user.getBooks();
 		   
@@ -408,12 +443,17 @@ public String CalculateDiscount(Model model, @RequestParam("code") String code, 
 
 	model.addAttribute("totalPrice", totalPrice);
 	}
+	
+	
+	System.out.print("its calling the method");
 	///pass new payment details object here
 	return "payment";
 
 
 	
 }
+
+
 
 //@RequestMapping(value="/payment}", method=RequestMethod.GET)
 //public String ViewCart22(Model model) {

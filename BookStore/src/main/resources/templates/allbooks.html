@@ -27,7 +27,7 @@
 						<th>Topic</th>	
 						<th>Universal Book Number</th>
 						<th>No. in Stock</th>			
-								<th>Price $</th>		
+						<th>Price $</th>		
 					</tr>
 				</thead>
 				<tbody>
@@ -56,7 +56,9 @@
 										'<td>' + book.amount + '</td>' +
 										'<td>' + book.price + '</td>' +
 															
-										 '<td><a href="/addtocart/'+ book.title +'"> Add to Cart?</a></td>' + 	 '</tr>';
+										 '<td><a href="/addtocart/'+ book.title +'"> Add to Cart?</a></td>' + 	 '</tr>' +
+															
+										  '<td><a href="/showbookReview/'+book.title+'"> See Reviews</a></td>' + 	 '</tr>';
 									
 					$('#customerTable tbody').append(customerRow);
 				

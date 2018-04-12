@@ -18,9 +18,10 @@
 		  	<input class="form-control" id="inputFilter" type="text" placeholder="Search.." />
 		  	</div>
 		  	<centre>
-			<table id="customerTable" class="table table-bordered table-hover table-responsive">
+			<table id="customerTable" class="table table-bordered table-hover table-responsive" border="0" width="100%" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Id</th>
 						<th>Author</th>
 						<th>Title</th>
@@ -48,6 +49,7 @@
 				$.each(result, function(i, book){
 					
 					var customerRow = '<tr>' +
+					  '<td><img src=/images/' + book.imagePath + '/></td>'  +
 										'<td>' + book.id + '</td>' +
 										'<td>' + book.author + '</td>' +
 										'<td>' + book.title + '</td>' +
@@ -55,8 +57,10 @@
 										'<td>' + book.number + '</td>' +
 										'<td>' + book.amount + '</td>' +
 										'<td>' + book.price + '</td>' +
-															
-										 '<td><a href="/addtocart/'+ book.title +'"> Add to Cart?</a></td>' + 	 '</tr>' +
+									
+									
+										
+										 '<td><a href="/addtocart/'+ book.title +'"> Add to Cart?</a></td>' +
 															
 										  '<td><a href="/showbookReview/'+book.title+'"> See Reviews</a></td>' + 	 '</tr>';
 									

@@ -39,6 +39,7 @@ public class UserLogin {
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Role> roles;
 	
+	
 	public UserLogin() {
 		super();
 	}

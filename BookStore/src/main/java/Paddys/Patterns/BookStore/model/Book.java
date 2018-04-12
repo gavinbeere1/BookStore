@@ -22,6 +22,7 @@ public class Book {
 	private int number;
 	private int amount;
 	private int price;
+	private String imagePath;
 
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Rating> ratings;
@@ -31,11 +32,8 @@ public class Book {
 		super();
 	}
 
-
-
-	
 	public Book(Long id, String author, String title, String topic, int number,
-			int amount, int price, Set<Rating> ratings) {
+			int amount, int price, String imagePath, Set<Rating> ratings) {
 		super();
 		this.id = id;
 		this.author = author;
@@ -44,25 +42,26 @@ public class Book {
 		this.number = number;
 		this.amount = amount;
 		this.price = price;
+		this.imagePath = imagePath;
 		this.ratings = ratings;
 	}
 
-	
 
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
 	public int getPrice() {
 		return price;
 	}
 
-
-
-
 	public void setPrice(int price) {
 		this.price = price;
 	}
-
-
-
 
 	public int getAmount() {
 		return amount;

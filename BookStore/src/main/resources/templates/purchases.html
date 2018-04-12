@@ -16,6 +16,8 @@
 	<ul>
     <th:block th:object="${myPurchases}" th:each="item : ${myPurchases?.purchasedBooks}">
    <h3>---------------------------------------</h3>
+ 				  			<img th:src="@{${'/images/' + item?.imagePath}}"  />
+ 	
    <h5>ID:<text th:text="${item?.id}" /> </h5>
     <h5>Author:<text th:text="${item?.author}" /> </h5>
     <h5>Title:<text th:text="${item?.title}" /> </h5>

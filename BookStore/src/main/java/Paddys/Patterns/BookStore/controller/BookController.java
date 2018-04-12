@@ -12,14 +12,18 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Paddys.Patterns.BookStore.model.Book;
+import Paddys.Patterns.BookStore.model.Discount;
 import Paddys.Patterns.BookStore.model.Rating;
 import Paddys.Patterns.BookStore.model.Role;
 import Paddys.Patterns.BookStore.repository.UserLoginRepository;
@@ -44,6 +49,7 @@ import Paddys.Patterns.BookStore.repository.BookRepository;
 
 @Controller
 	public class BookController {
+	
 	
 	
 	@Autowired
@@ -95,10 +101,9 @@ public String addNewPost(@Valid UserLogin user, Model model, BindingResult error
 }
 
 
-
 @RequestMapping(value={"/welcome"})
 public String welcome2(){
-	   
+	  
 	      Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 	      String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
 
@@ -196,6 +201,10 @@ public String ViewBook(Model model, @PathVariable String title) {
 @RequestMapping(value = "/mycart", method=RequestMethod.GET)
 	public String viewMyTeam(Model model) {
 
+
+	
+
+	
 	  Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
       String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
 
@@ -268,8 +277,9 @@ public String ShowBook(Model model, @PathVariable String title) {
 	
 	 
 	  Book book = bookRepository.findByTitle(title);
-
+	  String image = book.getImagePath();
 	   
+	  model.addAttribute("image", image);
 	  model.addAttribute("book", book);
 	   return "justReviewed";
 }
@@ -328,7 +338,29 @@ public String ViewPurchases(Model model, @PathVariable String userName) {
 	 
     return "myPurchases";
 }
+@RequestMapping(value="/calculateD", method=RequestMethod.POST)
+public String CalculateDiscount(Model model, @RequestBody String code) {
+	
+	
+	 //need to pass the price as well with the code. bring the discounted price to the card page, on the card page, enter details and when submitted
+	// users cart goes to purchases, aswell as a pattern for monitoring the stock
+	Discount dc = Discount.getInstance();
+	
+	 String code2 = code.substring(5);
+	if (dc.calculatePrice(code2) == true)
+	{
+		
+	}
+	else
+	{
+		System.out.print("Wrong Code " + code2);
+	}
+	
+//	model.addAttribute("totalPrice", totalPrice);
+	
+	return "payment";
 
+}
 
 //This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
 @RequestMapping(value="/discount", method=RequestMethod.GET)
@@ -357,16 +389,7 @@ public String Discount(Model model) {
 	
 }
 
-//@RequestMapping(value="/discountCheck", method=RequestMethod.GET)
-//public String DiscountCheck(Model model, @RequestAttribute("discount") String discount) {
-//	
-//	
-//	System.out.print(discount);
-//	
-//	return "discountPage";
-//	
-//	
-//}
+
 //This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
 @RequestMapping(value="/purchaseBooks", method=RequestMethod.GET)
 public String PurchaseBooks(Model model) {
@@ -379,7 +402,7 @@ public String PurchaseBooks(Model model) {
 
 	   Set<Book> set = user.getBooks();
 
-	   
+	  
 	   //Deleting a list
 	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
 	  {
@@ -401,57 +424,57 @@ public String PurchaseBooks(Model model) {
 	
 }
 
-@RequestMapping(value="/calculateDiscount", method=RequestMethod.GET)
-@ResponseBody
-public String CalculateDiscount(Model model, @RequestParam("code") String code,  RedirectAttributes redirectAttributes) {
-	
-	///need to calculate price if codes correct then return page with card info then after proceed call purchasebooks controller!
-	System.out.println("Price: " + code );
-	 Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-     String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
-
-     UserLogin user = uR.findByUserName(email);
-   
-     int totalPrice = 0;
-	if (code.equals("Discount1010"))
-	{
-		
-	      
-		   Set<Book> books = user.getBooks();
-		   
-		   for (Book b : books)
-		   {
-			   totalPrice = totalPrice + b.getPrice();
-		   }
-		   int discountPrice = (int) (totalPrice * .80);
-		   
-		   model.addAttribute("totalPrice", totalPrice);
-		   
-			System.out.println("Price: " + discountPrice );
-	}
-	
-	else {
-	
-		Set<Book> books = user.getBooks();
-		   
-		   for (Book b : books)
-		   {
-			   totalPrice = totalPrice + b.getPrice();
-		   }
-		   
-	System.out.println("Price: " + totalPrice );
-
-	model.addAttribute("totalPrice", totalPrice);
-	}
-	
-	
-	System.out.print("its calling the method");
-	///pass new payment details object here
-	return "payment";
-
-
-	
-}
+//@RequestMapping(value="/calculateDiscount", method=RequestMethod.GET)
+//@ResponseBody
+//public String CalculateDiscount(Model model, @RequestParam("code") String code,  RedirectAttributes redirectAttributes) {
+//	
+//	///need to calculate price if codes correct then return page with card info then after proceed call purchasebooks controller!
+//	System.out.println("Price: " + code );
+//	 Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//     String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+//
+//     UserLogin user = uR.findByUserName(email);
+//   
+//     int totalPrice = 0;
+//	if (code.equals("Discount1010"))
+//	{
+//		
+//	      
+//		   Set<Book> books = user.getBooks();
+//		   
+//		   for (Book b : books)
+//		   {
+//			   totalPrice = totalPrice + b.getPrice();
+//		   }
+//		   int discountPrice = (int) (totalPrice * .80);
+//		   
+//		   model.addAttribute("totalPrice", totalPrice);
+//		   
+//			System.out.println("Price: " + discountPrice );
+//	}
+//	
+//	else {
+//	
+//		Set<Book> books = user.getBooks();
+//		   
+//		   for (Book b : books)
+//		   {
+//			   totalPrice = totalPrice + b.getPrice();
+//		   }
+//		   
+//	System.out.println("Price: " + totalPrice );
+//
+//	model.addAttribute("totalPrice", totalPrice);
+//	}
+//	
+//	
+//	System.out.print("its calling the method");
+//	///pass new payment details object here
+//	return "payment";
+//
+//
+//	
+//}
 
 
 

@@ -5,27 +5,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-function myFunction(){
 
-
-		var code = document.getElementById("code").value;
- 		 var price = document.getElementById("price").value;
-
-	$.ajax({
-  type: "GET",
-  url: "/calculateDiscount",
-  data: {  
-          code: code
-	} // parameters
-
-/* 	contentType: "application/json; charset=utf-8",
-datatype: 'json' */
-//alert(status);
-});
-}
-
-</script>
 
 </head>
 <body>
@@ -33,11 +13,15 @@ datatype: 'json' */
 <div>
 <center>
 
- 	<h3>Total Price: $<text th:text="${totalPrice}" id="price"/> </h3>
- 	<input type="text" name="firstname" id="code">
-   <button onclick="myFunction()">Calculate Discount</button> 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ 	<h3>Total Price: $<text th:text="${totalPrice}" id="price" /> </h3>
  	
+ 	<form action="#" th:action="@{/calculateD}" method="post" >
+ 	
+ 	<input type="text" name="code">
+ 	
+    <button type="submit">Calculate Discount</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+ 	</form>
 	   <a style="color:blue" th:href="@{/welcome}">HomeScreen!</a>
 	   <br />                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
  	

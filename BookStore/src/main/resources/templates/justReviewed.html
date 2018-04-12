@@ -8,6 +8,8 @@
 <body>
 <center>
 			<h1>Reviews</h1>	
+			  			<img th:src="@{${'/images/' + book?.imagePath}}"  />
+			  
 	<h4>Author: <text th:text="${book?.author}" /> </h4>
 	<h4>Title: <text th:text="${book?.title}" /> </h4>
 	<h4>Topic: <text th:text="${book?.topic}" /> </h4>

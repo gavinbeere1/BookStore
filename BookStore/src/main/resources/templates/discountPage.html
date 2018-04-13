@@ -13,9 +13,12 @@
 <div>
 <center>
 
- 	<h3>Total Price: $<text th:text="${totalPrice}" id="price" /> </h3>
+<!--  	<h3>Total Price: $<text th:text="${totalPrice}" id="price" /> </h3>
+ --> 	
+ 	<form action="#" th:action="@{/calculateD/{totalPrice}(totalPrice=${totalPrice})}" method="post" >
  	
- 	<form action="#" th:action="@{/calculateD}" method="post" >
+ 	 	<h3>Total Price: $<text th:text="${totalPrice}" name="price" /> </h3>
+ 	
  	
  	<input type="text" name="code">
  	

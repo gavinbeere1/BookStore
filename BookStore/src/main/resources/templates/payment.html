@@ -6,5 +6,52 @@
 </head>
 <body>
 	<h3>Total Price: $<text th:text="${totalPrice}" id="price"/> </h3>
+	
+
+<center>
+<td>
+
+	
+	<h3>Payment Details</h3>
+
+	<form action="#" th:action="@{/purchaseBooks}" th:object="${paymentDetails}" method="post">
+		<table>
+		<tr>
+		<td>Card number:</td>
+				<td><input type="text" th:field="*{cardNumber}" /></td>
+			</tr>
+			<tr>
+				<td>Address:</td>
+				<td><input type="text" th:field="*{address}" /></td>
+			</tr>
+		
+			
+			<tr>
+				<td>Card Type:</td>
+				
+				<td><select name="paymentMethod" th:field="*{paymentMethod}" >
+  					<option value="Visa">Visa</option>
+  					<option value="Debit">Debit</option>
+  					<option value="Mastercard">Mastercard</option>
+				</select></td>
+			</tr>
+	
+			<tr>
+				<td></td><td><button type="submit">Purchase Books</button></td>
+			</tr>
+	
+		</table>
+	</form>
+	
+	</td>
+	
+	<br />
+	          <a style="color:blue" th:href="@{/}">HomeScreen!</a>
+	
+	</center>
+
+
+
+		  
 </body>
 </html>

@@ -43,26 +43,13 @@
 				
 				<td><input type="email" th:field="*{userName}" /></td>
 			</tr>
-				<tr>
-		
-				<td>Address:</td>
-				<td><input type="text" th:field="*{address}" /></td>
-			</tr>
+			
 		
 			<tr>
 				<td>Password:</td>
 				<td><input type="password" th:field="*{password}" /></td>
 			</tr>
-			<tr>
-				<td>Payment Method:</td>
-				
-				<td><select name="paymentMethod" th:field="*{paymentMethod}" >
-  					<option value="Cash">Cash?</option>
-  					<option value="Visa">Visa card</option>
-  					<option value="Debit">Debit</option>
-  					
-				</select></td>
-			</tr>
+		
 	
 			<tr>
 				<td></td><td><button type="submit">Submit</button></td>

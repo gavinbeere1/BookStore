@@ -27,8 +27,10 @@ public class UserLogin {
 	private String password;
 	private boolean userStatus;
 	
-	@OneToOne
-	public PaymentDetails payDetails;
+;
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	public Set<PaymentDetails> payDetails;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	public Set<Book> books;
@@ -47,7 +49,7 @@ public class UserLogin {
     
 	public UserLogin(Long id, String firstName, String lastName, Long phone,
 			String userName, String password, boolean userStatus,
-			PaymentDetails payDetails, Set<Book> books,
+			Set<PaymentDetails> payDetails, Set<Book> books,
 			Set<Book> purchasedBooks, Set<Role> roles) {
 		super();
 		this.id = id;
@@ -64,12 +66,23 @@ public class UserLogin {
 	}
 
 
-	public PaymentDetails getPayDetails() {
+
+	public void addPaymentDetails(PaymentDetails payDetails)
+	{
+		getPayDetails().add(payDetails);
+	}
+
+
+	public Set<PaymentDetails> getPayDetails() {
+		if (payDetails == null)
+		{
+			payDetails = new HashSet<>();
+		}
 		return payDetails;
 	}
 
 
-	public void setPayDetails(PaymentDetails payDetails) {
+	public void setPayDetails(Set<PaymentDetails> payDetails) {
 		this.payDetails = payDetails;
 	}
 

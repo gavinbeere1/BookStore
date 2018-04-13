@@ -29,20 +29,37 @@ public class Discount {
 		return discount;
 	}
 	
-	public boolean calculatePrice(String code)
+	public double calculatePrice(String code)
 	{
+		double discount=0;
+		
 		for (String e : discountCode)
 		{
-			if (code.equals(e))
+			
+			if (code.equals(e) && e.equals("Discount1010"))
 			{
-				correctCode = true;
-				break;
+				discount =  .2;
+				break;	
+			}
+			if (code.equals(e) && e.equals("NewMember"))
+			{
+				discount =  .25;
+				break;	
+			}
+			if (code.equals(e) && e.equals("LongfordBookClub"))
+			{
+				discount =  .3;
+				break;	
+			}
+			else 
+			{
+				discount = 1;
 				
 			}
 			
 		}
-	
-		return correctCode;
+		
+		return discount;
 		
 	}
 	

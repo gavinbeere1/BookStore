@@ -39,8 +39,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import Paddys.Patterns.BookStore.Service.OrderController;
+import Paddys.Patterns.BookStore.Service.PurchaseServiceFacadeImpl;
 import Paddys.Patterns.BookStore.model.Book;
 import Paddys.Patterns.BookStore.model.Discount;
+import Paddys.Patterns.BookStore.model.PaymentDetails;
 import Paddys.Patterns.BookStore.model.Rating;
 import Paddys.Patterns.BookStore.model.Role;
 import Paddys.Patterns.BookStore.repository.UserLoginRepository;
@@ -210,7 +213,7 @@ public String ViewBook(Model model, @PathVariable String title) {
 
       UserLogin user = uR.findByUserName(email);
     
-      int totalPrice = 0;
+      double totalPrice = 0;
       
 	   Set<Book> books = user.getBooks();
 	   
@@ -338,25 +341,35 @@ public String ViewPurchases(Model model, @PathVariable String userName) {
 	 
     return "myPurchases";
 }
-@RequestMapping(value="/calculateD", method=RequestMethod.POST)
-public String CalculateDiscount(Model model, @RequestBody String code) {
+@RequestMapping(value="/calculateD/{totalPrice}", method=RequestMethod.POST)
+public String CalculateDiscount(Model model, @RequestBody String code, @PathVariable int totalPrice) {
 	
-	
+	double discountedPrice = 0.0;
 	 //need to pass the price as well with the code. bring the discounted price to the card page, on the card page, enter details and when submitted
 	// users cart goes to purchases, aswell as a pattern for monitoring the stock
 	Discount dc = Discount.getInstance();
 	
 	 String code2 = code.substring(5);
-	if (dc.calculatePrice(code2) == true)
-	{
-		
-	}
-	else
-	{
-		System.out.print("Wrong Code " + code2);
-	}
+	 System.out.println("Price b4: " + totalPrice);
+
+	 
+	 
+	 double discountAmount = dc.calculatePrice(code2);	 
+	 
+	 System.out.println("Discounted Amount: " + discountAmount);
+
+	 if (discountAmount == 1.0)
+	 {
+		 model.addAttribute("totalPrice", totalPrice);
+	 }
+	 else
+	 {
+	 discountedPrice =  (totalPrice - (totalPrice * discountAmount));
+	 model.addAttribute("totalPrice", discountedPrice);
+	 }	 
 	
-//	model.addAttribute("totalPrice", totalPrice);
+	 model.addAttribute("paymentDetails", new PaymentDetails());
+
 	
 	return "payment";
 
@@ -390,103 +403,105 @@ public String Discount(Model model) {
 }
 
 
-//This method works, although it doesnt clarify books were purchased, needs to redirect to purchase page
-@RequestMapping(value="/purchaseBooks", method=RequestMethod.GET)
-public String PurchaseBooks(Model model) {
+@RequestMapping(value="/purchaseBooks", method=RequestMethod.POST)
+public String PurchaseBooks(@Valid PaymentDetails paymentDetails, Model model, BindingResult errors) {
 	
-
+	System.out.print("Payment Details : " + paymentDetails.getAddress() + paymentDetails.getCardNumber() + paymentDetails.getPaymentMethod());
+	
 	   Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 	   String email = loggedInUser.getName();
-	   
+   
 	   UserLogin user = uR.findByUserName(email);
-
+	   
+	   user.addPaymentDetails(paymentDetails);
+	   
 	   Set<Book> set = user.getBooks();
-
-	  
-	   //Deleting a list
-	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
-	  {
-		  Book b = iterator.next();
-		  
-		  if (b.getId() > 0)
-			  
-		  user.addPurchasedBook(b);
-		  iterator.remove();
-		  
-	  }
-
-	 uR.save(user);
+	   
+	   
+	    for(Book book: set) {
+    OrderController controller=new OrderController();
+    controller.facade=new PurchaseServiceFacadeImpl();
+     controller.orderProduct(book.getId());
+     int newQuantity = book.getAmount() - 1;
+ 	book.setAmount(newQuantity);
+     boolean result=controller.orderFulfilled;
+     System.out.println(result);
+     System.out.println(newQuantity);
+     
+     //this pattern works for quantity, now cloning for transferring cart i.e below. also persist everything
+     
+ }
 	 
-	 
-	model.addAttribute("myPurchases", user);
+	   
+	   
+//
+//	   Set<Book> set = user.getBooks();
+//
+//	  
+//	   //Deleting a list
+//	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
+//	  {
+//		  Book b = iterator.next();
+//		  
+//		  if (b.getId() > 0)
+//			  
+//		  user.addPurchasedBook(b);
+//		  iterator.remove();
+//		  
+//	  }
+//
+//	 uR.save(user);
+//	 
+//	 
+//	model.addAttribute("myPurchases", user);
 	
 	return "purchases";
 	
 }
 
-//@RequestMapping(value="/calculateDiscount", method=RequestMethod.GET)
+//@RequestMapping(value="paymentDetails", method=RequestMethod.GET)
 //@ResponseBody
-//public String CalculateDiscount(Model model, @RequestParam("code") String code,  RedirectAttributes redirectAttributes) {
+//public String payment(@RequestParam("shipping") String shipping,
+//		              @RequestParam("creditcard") String creditcard,
+//		              @RequestParam("expirydate") String expirydate,
+//		              @RequestParam("carddetails") int carddetails,
+//		              @RequestParam("cvv") int cvv) {
 //	
-//	///need to calculate price if codes correct then return page with card info then after proceed call purchasebooks controller!
-//	System.out.println("Price: " + code );
-//	 Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-//     String email = loggedInUser.getName(); // getName() is springs way to get the logged in user name, which in my case is their email (i.e what they login with)
+//	
+//	System.out.println("Shipping Address: " + shipping + "\n" +
+//			           "Credit Card Type: " + creditcard + "\n" +
+//			           "Expiry Date: " + expirydate + "\n" +
+//			           "Card Number: " + carddetails + "\n" +
+//			           "CVV: " + cvv + "\n");
+//	
+//	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//    String username = loggedInUser.getName(); // Authentication for 
+//    User user = userRepository.findByUsername(username);
+//    
+//    user.setShipping_address(shipping);
+//    
 //
-//     UserLogin user = uR.findByUserName(email);
-//   
-//     int totalPrice = 0;
-//	if (code.equals("Discount1010"))
-//	{
-//		
-//	      
-//		   Set<Book> books = user.getBooks();
-//		   
-//		   for (Book b : books)
-//		   {
-//			   totalPrice = totalPrice + b.getPrice();
-//		   }
-//		   int discountPrice = (int) (totalPrice * .80);
-//		   
-//		   model.addAttribute("totalPrice", totalPrice);
-//		   
-//			System.out.println("Price: " + discountPrice );
-//	}
-//	
-//	else {
-//	
-//		Set<Book> books = user.getBooks();
-//		   
-//		   for (Book b : books)
-//		   {
-//			   totalPrice = totalPrice + b.getPrice();
-//		   }
-//		   
-//	System.out.println("Price: " + totalPrice );
-//
-//	model.addAttribute("totalPrice", totalPrice);
-//	}
-//	
-//	
-//	System.out.print("its calling the method");
-//	///pass new payment details object here
-//	return "payment";
-//
-//
-//	
+//    List<Book> shoppingcart = user.getShoppingCart();
+//    
+//    for(Book book: shoppingcart) {
+//        OrderProcessController controller=new OrderProcessController();
+//        controller.facade=new OrderServiceFacadeImpl();
+//        controller.orderProduct(book.getId());
+//        int newQuantity = book.getQuantity() - 1;
+//    	book.setQuantity(newQuantity);
+//        boolean result=controller.orderFulfilled;
+//        System.out.println(result);
+//    }
+//    System.out.println("Stock Updated");
+//    user.clearShoppingCart();
+//    System.out.println("Shopping cart cleared");
+//    userRepository.save(user);
+//    System.out.println("");
+//    
+//	return "confirmpage";
 //}
 
 
 
-//@RequestMapping(value="/payment}", method=RequestMethod.GET)
-//public String ViewCart22(Model model) {
-//	   
-//	   
-//	   
-//	  
-//	  
-//	 
-//    return "payment";
-//}
 
 }

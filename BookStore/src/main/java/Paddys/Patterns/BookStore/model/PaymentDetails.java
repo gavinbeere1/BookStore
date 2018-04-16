@@ -15,7 +15,6 @@ public class PaymentDetails {
 	private String paymentMethod;
 	private String cardNumber;
 	private String address;
-
 	
 
 	public PaymentDetails() {

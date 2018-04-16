@@ -286,7 +286,6 @@ public String ShowBook(Model model, @PathVariable String title) {
 	  model.addAttribute("book", book);
 	   return "justReviewed";
 }
-
 @RequestMapping(value="/reviewBook/{id}", method=RequestMethod.GET)
 public String removeBook(@PathVariable String id, Model model) {
 	   
@@ -296,7 +295,6 @@ public String removeBook(@PathVariable String id, Model model) {
 //    int bar = toIntExact(id);
 //	
 	Book book = bookRepository.findByTitle(id);
-	
 	model.addAttribute("book", book);
 	model.addAttribute("rating", new Rating());
 	   
@@ -345,8 +343,7 @@ public String ViewPurchases(Model model, @PathVariable String userName) {
 public String CalculateDiscount(Model model, @RequestBody String code, @PathVariable int totalPrice) {
 	
 	double discountedPrice = 0.0;
-	 //need to pass the price as well with the code. bring the discounted price to the card page, on the card page, enter details and when submitted
-	// users cart goes to purchases, aswell as a pattern for monitoring the stock
+	
 	Discount dc = Discount.getInstance();
 	
 	 String code2 = code.substring(5);
@@ -401,7 +398,19 @@ public String Discount(Model model) {
 	
 	
 }
+@RequestMapping(value="/purchasedBooks", method=RequestMethod.GET)
+public String ViewPurchasedBooks(Model model) {
+	   
+	   Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+	   String email = loggedInUser.getName();
 
+	   UserLogin user = uR.findByUserName(email);
+    
+	  model.addAttribute("mycart", user);
+	  
+	 
+    return "myPurchases";
+}
 
 @RequestMapping(value="/purchaseBooks", method=RequestMethod.POST)
 public String PurchaseBooks(@Valid PaymentDetails paymentDetails, Model model, BindingResult errors) {
@@ -458,48 +467,6 @@ public String PurchaseBooks(@Valid PaymentDetails paymentDetails, Model model, B
 	return "purchases";
 	
 }
-
-//@RequestMapping(value="paymentDetails", method=RequestMethod.GET)
-//@ResponseBody
-//public String payment(@RequestParam("shipping") String shipping,
-//		              @RequestParam("creditcard") String creditcard,
-//		              @RequestParam("expirydate") String expirydate,
-//		              @RequestParam("carddetails") int carddetails,
-//		              @RequestParam("cvv") int cvv) {
-//	
-//	
-//	System.out.println("Shipping Address: " + shipping + "\n" +
-//			           "Credit Card Type: " + creditcard + "\n" +
-//			           "Expiry Date: " + expirydate + "\n" +
-//			           "Card Number: " + carddetails + "\n" +
-//			           "CVV: " + cvv + "\n");
-//	
-//	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-//    String username = loggedInUser.getName(); // Authentication for 
-//    User user = userRepository.findByUsername(username);
-//    
-//    user.setShipping_address(shipping);
-//    
-//
-//    List<Book> shoppingcart = user.getShoppingCart();
-//    
-//    for(Book book: shoppingcart) {
-//        OrderProcessController controller=new OrderProcessController();
-//        controller.facade=new OrderServiceFacadeImpl();
-//        controller.orderProduct(book.getId());
-//        int newQuantity = book.getQuantity() - 1;
-//    	book.setQuantity(newQuantity);
-//        boolean result=controller.orderFulfilled;
-//        System.out.println(result);
-//    }
-//    System.out.println("Stock Updated");
-//    user.clearShoppingCart();
-//    System.out.println("Shopping cart cleared");
-//    userRepository.save(user);
-//    System.out.println("");
-//    
-//	return "confirmpage";
-//}
 
 
 

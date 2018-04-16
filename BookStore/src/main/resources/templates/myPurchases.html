@@ -21,6 +21,8 @@
     <h5>Topic:<text th:text="${item?.topic}" /> </h5>
      <h5>Universal Book Code:<text th:text="${item?.number}" /> </h5>
       <h5>Amount Left in Store:<text th:text="${item?.amount}" /> </h5>
+       <a style="color:blue" th:href="@{/reviewBook/{id}(id=${item?.title})}">Review Book!</a>
+      
     </th:block>
     </ul>
  	<h3>Total Price: $<text th:text="${totalPrice}"/> </h3>

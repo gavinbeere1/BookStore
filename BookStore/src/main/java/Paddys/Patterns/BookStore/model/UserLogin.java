@@ -12,10 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import Paddys.Patterns.BookStore.Service.User;
+
 
 
 @Entity
-public class UserLogin {
+public class UserLogin implements User {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -210,6 +212,29 @@ public void addPurchasedBook(Book purchasedBooks)
 
 	public void RemoveBook(Book book){
 		books.remove(book);
+	}
+
+
+	
+	public User makeCopy() {
+		
+		UserLogin userObject = null;
+		
+		try {
+	
+			userObject = (UserLogin) super.clone();
+			
+		}
+
+		catch (CloneNotSupportedException e) {
+			  
+			
+			e.printStackTrace();
+			  
+		 }
+		
+		return userObject;
+		
 	}
 	
 

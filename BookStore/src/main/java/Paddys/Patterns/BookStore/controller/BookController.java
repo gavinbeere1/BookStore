@@ -39,8 +39,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import Paddys.Patterns.BookStore.Service.CloneFactory;
 import Paddys.Patterns.BookStore.Service.OrderController;
 import Paddys.Patterns.BookStore.Service.PurchaseServiceFacadeImpl;
+import Paddys.Patterns.BookStore.Service.User;
 import Paddys.Patterns.BookStore.model.Book;
 import Paddys.Patterns.BookStore.model.Discount;
 import Paddys.Patterns.BookStore.model.PaymentDetails;
@@ -228,7 +230,7 @@ public String ViewBook(Model model, @PathVariable String title) {
 	     return "mycart";
 }
 
-@RequestMapping(value="/removebook/{title}", method=RequestMethod.POST)
+@RequestMapping(value="/removebook/{title}", method=RequestMethod.GET)
 public String leaveTeam(@PathVariable String title) {
 	   
 	   
@@ -434,41 +436,40 @@ public String PurchaseBooks(@Valid PaymentDetails paymentDetails, Model model, B
      int newQuantity = book.getAmount() - 1;
  	book.setAmount(newQuantity);
      boolean result=controller.orderFulfilled;
-     System.out.println(result);
-     System.out.println(newQuantity);
      
-     //this pattern works for quantity, now cloning for transferring cart i.e below. also persist everything
+	    }
+	    
+	    
+     CloneFactory userMaker = new CloneFactory();
      
- }
+
+     
+     UserLogin clonedUser = (UserLogin) userMaker.getClone(user);
+
+	  
+
+	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
+	  {
+		  Book b = iterator.next();
+		  
+		  if (b.getId() > 0)
+			  
+		  clonedUser.addPurchasedBook(b);
+		  iterator.remove();
+		  
+	  }
+	  uR.delete(user);
+
+	 uR.save(clonedUser);
 	 
-	   
-	   
-//
-//	   Set<Book> set = user.getBooks();
-//
-//	  
-//	   //Deleting a list
-//	  for (Iterator<Book> iterator = set.iterator(); iterator.hasNext();)
-//	  {
-//		  Book b = iterator.next();
-//		  
-//		  if (b.getId() > 0)
-//			  
-//		  user.addPurchasedBook(b);
-//		  iterator.remove();
-//		  
-//	  }
-//
-//	 uR.save(user);
-//	 
-//	 
-//	model.addAttribute("myPurchases", user);
+	 
+	model.addAttribute("myCart", clonedUser);
 	
-	return "purchases";
+	return "myPurchases";
 	
+
+
 }
-
-
 
 
 }
